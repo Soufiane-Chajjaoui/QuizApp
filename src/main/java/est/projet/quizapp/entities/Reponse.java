@@ -10,11 +10,13 @@ import java.util.Date;
 @Data
 public class Reponse {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String rep ;
     private boolean isCorrect;
 
     @ManyToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     @Temporal(TemporalType.TIMESTAMP)
