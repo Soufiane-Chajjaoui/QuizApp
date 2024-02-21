@@ -3,10 +3,13 @@ package est.projet.quizapp.mappers;
 import est.projet.quizapp.dtos.QuestionDTO;
 import est.projet.quizapp.entities.Question;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring" , uses = {QuizMapper.class , ReponseMapper.class})
 public interface QuestionMapper {
 
-    Question fromQuestionDTO(QuestionDTO questionDTO);
-    QuestionDTO fromQuestion(Question question);
+    QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
+    Question fromDTO(QuestionDTO questionDTO);
+
+    QuestionDTO toEntity(Question question);
 }
