@@ -12,11 +12,12 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data
 public class ReponseDTO {
     private Long id ;
     private String rep ;
     private boolean isCorrect;
     private Question question;
     private Date createAt;
+
 }

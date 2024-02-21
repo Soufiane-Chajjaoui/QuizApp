@@ -10,8 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.List;
-
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data
 public class QuestionDTO {
     private Long id ;
     private String content;
