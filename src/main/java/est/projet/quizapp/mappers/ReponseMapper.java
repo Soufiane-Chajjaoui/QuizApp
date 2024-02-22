@@ -11,5 +11,5 @@ public interface ReponseMapper {
     ReponseMapper INSTANCE = Mappers.getMapper(ReponseMapper.class);
     @Mapping(source = "createAt" , target = "createAt", ignore = true)
     Reponse fromDTO(ReponseDTO reponseDTO);
-    ReponseDTO toEntity(Reponse reponse);
+    ReponseDTO fromEntity(Reponse reponse);
 }

@@ -17,7 +17,7 @@ public class ReponseDTO {
     private Long id ;
     private String rep ;
     private boolean isCorrect;
-    private Question question;
+    private QuestionDTO questionDTO;
     private Date createAt;
 
 }

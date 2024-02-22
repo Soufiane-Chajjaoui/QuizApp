@@ -13,5 +13,5 @@ public interface QuestionMapper {
     @Mapping(source = "createAt" , target = "createAt", ignore = true)
     Question fromDTO(QuestionDTO questionDTO);
 
-    QuestionDTO toEntity(Question question);
+    QuestionDTO fromEntity(Question question);
 }

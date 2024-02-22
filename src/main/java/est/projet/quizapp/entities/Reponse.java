@@ -1,13 +1,16 @@
 package est.projet.quizapp.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
 @Entity
-@Data
+@Data @AllArgsConstructor
+@NoArgsConstructor
 public class Reponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

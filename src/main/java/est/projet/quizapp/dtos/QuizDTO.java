@@ -10,7 +10,6 @@ import java.util.List;
 public class QuizDTO {
     private Long id;
     private String titre;
-    private List<Question> questions;
-    private Date createAt;
-
+    private List<QuestionDTO> questionsDTO;
+    public Date createAt;
 }
