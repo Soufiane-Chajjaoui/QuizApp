@@ -9,13 +9,15 @@ import est.projet.quizapp.services.QuizServiceSignature;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/ApiV1/quiz")
+@RequestMapping("/api/v1/admin/quiz")
 @AllArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class QuizController {
 
     public QuizServiceSignature quizService;
@@ -95,7 +97,4 @@ public class QuizController {
     public ResponseEntity<?> getReponse(@PathVariable Long id){
         return ResponseEntity.of(quizService.getReponse(id));
     }
-
-
-
 }
