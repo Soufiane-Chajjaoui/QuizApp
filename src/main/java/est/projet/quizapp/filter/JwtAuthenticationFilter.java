@@ -2,6 +2,7 @@ package est.projet.quizapp.filter;
 
 import est.projet.quizapp.repositories.TokenRepo;
 import est.projet.quizapp.services.JwtService;
+import est.projet.quizapp.services.TokenCacheService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.io.IOException;
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private TokenRepo tokenRepo;
+    private TokenCacheService tokenCacheService;
     private UserDetailsService userDetailsService;
     private JwtService jwtService;
     @Override
@@ -43,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            var isvalideToken = tokenRepo.findByToken(token).map(t->!t.isLoggedout()).orElse(false);
+            var isvalideToken = tokenCacheService.findBytoken(token ).map(t->!t.isLoggedout()).orElse(false);
 
             if (jwtService.isTokenValid(token , userDetails) && isvalideToken){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

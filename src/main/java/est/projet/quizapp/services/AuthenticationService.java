@@ -1,5 +1,6 @@
 package est.projet.quizapp.services;
 
+import est.projet.quizapp.Exceptions.EntityExisted;
 import est.projet.quizapp.Exceptions.EntityNotFound;
 import est.projet.quizapp.dtos.AuthenticateRequest;
 import est.projet.quizapp.dtos.AuthenticationResponse;
@@ -23,12 +24,12 @@ public class AuthenticationService {
     private final RepoUser repoUser;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final TokenRepo tokenRepo;
+    private final TokenCacheService tokenCacheService;
     private final AuthenticationManager authenticationManager;
 
     public Optional<AuthenticationResponse> register(RegisterRequest registerRequest){
         if (repoUser.findByUsername(registerRequest.getUsername()).isPresent()){
-            return Optional.empty();
+            throw new EntityExisted(registerRequest.getUsername() + " has already registered");
         }
         User user = new User();
         user.setCompleteName(registerRequest.getCompleteName());
@@ -41,7 +42,6 @@ public class AuthenticationService {
         user = repoUser.save(user);
 
         String jwt = jwtService.generateToken(user);
-        revokeTokens(user);
         saveUserToken(jwt, user);
         return Optional.ofNullable(AuthenticationResponse.builder().token(jwt).build());
     }
@@ -63,13 +63,13 @@ public class AuthenticationService {
     }
 
     private void revokeTokens(User user) {
-        List<Token> tokens = tokenRepo.findAllValidTokenUser(user.getId());
+        List<Token> tokens = tokenCacheService.findAllValidTokenUser(user.getId());
         if (tokens.isEmpty())
             return;
         tokens.stream().forEach(token -> {
             token.setLoggedout(true);
         });
-        tokenRepo.saveAll(tokens);
+        tokenCacheService.saveAll(tokens);
     }
 
 
@@ -79,7 +79,7 @@ public class AuthenticationService {
                 .token(jwt)
                 .user(user)
                 .build();
-        tokenRepo.save(token);
+        tokenCacheService.save(token);
     }
 
 
