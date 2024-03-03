@@ -21,7 +21,7 @@ public interface QuizServiceSignature {
     Optional<QuestionDTO> updateQuestion(QuestionDTO questionDTO);
     Optional<ReponseDTO> addReponse(ReponseDTO reponseDTO);
     Optional<ReponseDTO> updateReponse(ReponseDTO reponseDTO);
-    Optional<Boolean> deleteResponse(Long id);
+    Optional<Boolean> deleteReponse(Long id);
 
     Optional<List<ReponseDTO>> getReponseByQuestion(Long id);
 

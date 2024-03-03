@@ -15,7 +15,6 @@ import static est.projet.quizapp.enums.Sex.MALE;
 import static est.projet.quizapp.enums.Sex.MAN;
 
 @SpringBootApplication
-@EnableCaching
 public class QuizAppApplication {
 
     public static void main(String[] args) {

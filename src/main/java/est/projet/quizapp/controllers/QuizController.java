@@ -83,7 +83,7 @@ public class QuizController {
 
     @DeleteMapping("/questions/reponse/{id}")
     public ResponseEntity<?> deleteReponse(@PathVariable Long id){
-        return ResponseEntity.of(quizService.deleteResponse(id));
+        return ResponseEntity.of(quizService.deleteReponse(id));
     }
     @PutMapping("/questions/reponse")
     public ResponseEntity<?> updateReponse(@RequestBody ReponseDTO reponseDTO){

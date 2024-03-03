@@ -14,9 +14,14 @@ import est.projet.quizapp.repositories.RepoQuestion;
 import est.projet.quizapp.repositories.RepoQuiz;
 import est.projet.quizapp.repositories.RepoReponse;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,13 +42,18 @@ public class QuizService implements QuizServiceSignature{
     public QuestionMapper questionMapper;
     public ReponseMapper reponseMapper;
 
+    //Caching
+    private CacheManager cacheManager;
+
 
     @Override
+    @CacheEvict(value = "Quiz" , allEntries = true )
     public Optional<QuizDTO> addQuiz(QuizDTO quizDTO){
 
         return Optional.ofNullable(quizMapper.fromEntity(repoQuiz.save(quizMapper.fromDTO(quizDTO))));
     }
     @Override
+    @CacheEvict(value = "Quiz" , key = "#id")
     public Optional<Boolean> deleteQuiz(Long id){
         repoQuiz.findById(id).orElseThrow(()-> new EntityNotFound("This Quiz Not Found") );
         repoQuiz.deleteById(id);
@@ -51,6 +61,7 @@ public class QuizService implements QuizServiceSignature{
     }
 
     @Override
+    @Cacheable(value = "Quiz" , key = "#id")
     public Optional<QuizDTO> getQuiz(Long id) {
 
         return Optional.ofNullable(
@@ -60,6 +71,7 @@ public class QuizService implements QuizServiceSignature{
 
 
     @Override
+    @CachePut(value = "Quiz" , key = "#quizDTO.id")
     public Optional<QuizDTO> updateQuiz(QuizDTO quizDTO){
         repoQuiz.findById(quizDTO.getId()).orElseThrow(()->new EntityNotFound( quizDTO.getTitre() +"Not Found"));
         Quiz quiz = quizMapper.fromDTO(quizDTO);
@@ -70,9 +82,11 @@ public class QuizService implements QuizServiceSignature{
     public Optional<List<QuizDTO>> getQuizzes() {
         List<Quiz> quizzes = repoQuiz.findAll();
         return Optional.ofNullable(quizzes.stream().map((q)->
-            quizMapper.fromEntity(q)).collect(Collectors.toList()));
+                quizMapper.fromEntity(q)).collect(Collectors.toList()));
     }
+
     @Override
+    @Cacheable(value = "Question")
     public Optional<List<QuestionDTO>> getQuestions(Long id) {
 
         return Optional.ofNullable(repoQuestion.findByQuizId(id).stream()
@@ -89,6 +103,7 @@ public class QuizService implements QuizServiceSignature{
     }
 
     @Override
+    @CacheEvict( value =  "Questions" , key = "#id")
     public Optional<Boolean> deleteQuestion(Long id) {
         try {
             repoQuestion.deleteById(id);
@@ -105,6 +120,7 @@ public class QuizService implements QuizServiceSignature{
     }
 
     @Override
+    @Cacheable( value =  "Questions" , key = "#id")
     public Optional<QuestionDTO> getQuestion(Long id) {
         Question question = repoQuestion.findById(id).orElseThrow(()-> new EntityNotFound("This Question Not Found"));
         return Optional.ofNullable(questionMapper.fromEntity(question));
@@ -127,7 +143,7 @@ public class QuizService implements QuizServiceSignature{
     }
 
     @Override
-    public Optional<Boolean> deleteResponse(Long id) {
+    public Optional<Boolean> deleteReponse(Long id) {
         try {
             repoReponse.deleteById(id);
             return Optional.of(true);
@@ -136,6 +152,7 @@ public class QuizService implements QuizServiceSignature{
         }
     }
     @Override
+    @Cacheable(value = "Reponses" , key = "#id")
     public Optional<List<ReponseDTO>> getReponseByQuestion(Long id){
         List<Reponse> reponses = repoReponse.findByQuestionId(id).orElseThrow(()->new EntityNotFound("Entity Not Found"));
         return Optional.ofNullable(reponses.stream().map(reponse -> reponseMapper.fromEntity(reponse)).collect(Collectors.toList()));

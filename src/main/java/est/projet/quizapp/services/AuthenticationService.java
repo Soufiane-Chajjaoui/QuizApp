@@ -8,7 +8,6 @@ import est.projet.quizapp.dtos.RegisterRequest;
 import est.projet.quizapp.entities.Token;
 import est.projet.quizapp.entities.User;
 import est.projet.quizapp.repositories.RepoUser;
-import est.projet.quizapp.repositories.TokenRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +47,6 @@ public class AuthenticationService {
 
 
     public  AuthenticationResponse authenticate(AuthenticateRequest userRequest){
-        System.out.println(userRequest.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userRequest.getUsername(),

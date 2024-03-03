@@ -23,7 +23,6 @@ public class TokenCacheService {
         return tokenRepo.findByToken(token);
     }
 
-    @CacheEvict(value = "Token" , key = "#root.methodName")
     public void save(Token token){
         tokenRepo.save(token);
     }
